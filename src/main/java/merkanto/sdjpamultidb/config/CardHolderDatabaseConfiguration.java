@@ -2,19 +2,20 @@ package merkanto.sdjpamultidb.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import merkanto.sdjpamultidb.domain.cardholder.CreditCardHolder;
-import merkanto.sdjpamultidb.domain.creditcard.CreditCard;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
+@EnableJpaRepositories(basePackages = "merkanto.sdjpamultidb.repositories.cardholder", entityManagerFactoryRef = "cardHolderEntityManagerFactory", transactionManagerRef = "cardHolderTransactionManager")
 @Configuration
 public class CardHolderDatabaseConfiguration {
 
