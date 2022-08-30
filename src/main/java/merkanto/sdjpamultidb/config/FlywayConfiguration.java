@@ -12,23 +12,24 @@ public class FlywayConfiguration {
 
     @Bean
     @ConfigurationProperties("spring.card.flyway")
-    public DataSourceProperties cardFlywayDataSourceProps() {
+    public DataSourceProperties cardFlywayDataSourceProps(){
         return new DataSourceProperties();
     }
 
     @Bean(initMethod = "migrate")
-    public Flyway flywayCard(@Qualifier("cardFlywayDataSourceProps") DataSourceProperties cardFlywayDataSourceProps) {
+    public Flyway flywayCard(@Qualifier("cardFlywayDataSourceProps")
+                             DataSourceProperties cardFlywayDataSourceProps){
         return Flyway.configure()
                 .dataSource(cardFlywayDataSourceProps.getUrl(),
                         cardFlywayDataSourceProps.getUsername(),
                         cardFlywayDataSourceProps.getPassword())
-                .locations("classpath:/db/migrations/card")
+                .locations("classpath:/db/migration/card")
                 .load();
     }
 
     @Bean
     @ConfigurationProperties("spring.cardholder.flyway")
-    public DataSourceProperties cardHolderFlywayDataSourceProps() {
+    public DataSourceProperties cardholderFlywayDataSourceProps(){
         return new DataSourceProperties();
     }
 
@@ -39,13 +40,13 @@ public class FlywayConfiguration {
                 .dataSource(cardholderFlywayDataSourceProps.getUrl(),
                         cardholderFlywayDataSourceProps.getUsername(),
                         cardholderFlywayDataSourceProps.getPassword())
-                .locations("classpath:/db/migrations/cardholder")
+                .locations("classpath:/db/migration/cardholder")
                 .load();
     }
 
     @Bean
     @ConfigurationProperties("spring.pan.flyway")
-    public DataSourceProperties panFlywayDataSourceProps() {
+    public DataSourceProperties panFlywayDataSourceProps(){
         return new DataSourceProperties();
     }
 
@@ -56,7 +57,7 @@ public class FlywayConfiguration {
                 .dataSource(panFlywayDataSourceProps.getUrl(),
                         panFlywayDataSourceProps.getUsername(),
                         panFlywayDataSourceProps.getPassword())
-                .locations("classpath:/db/migrations/pan")
+                .locations("classpath:/db/migration/pan")
                 .load();
     }
 }
