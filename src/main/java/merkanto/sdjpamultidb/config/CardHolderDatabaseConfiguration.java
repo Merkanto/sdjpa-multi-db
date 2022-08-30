@@ -16,19 +16,19 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@EnableJpaRepositories(basePackages = "merkanto.sdjpamultidb.repositories.cardholder", entityManagerFactoryRef = "cardHolderEntityManagerFactory", transactionManagerRef = "cardHolderTransactionManager")
+@EnableJpaRepositories(basePackages = "merkanto.sdjpamultidb.repositories.cardholder", entityManagerFactoryRef = "cardholderEntityManagerFactory", transactionManagerRef = "cardholderTransactionManager")
 @Configuration
 public class CardHolderDatabaseConfiguration {
 
     @Bean
     @ConfigurationProperties("spring.cardholder.datasource")
-    public DataSourceProperties cardHolderDataSourceProperties() {
+    public DataSourceProperties cardHolderDataSourceProperties(){
         return new DataSourceProperties();
     }
 
     @Bean
     @ConfigurationProperties("spring.cardholder.datasource.hikari")
-    public DataSource cardHolderDataSource(@Qualifier("cardHolderDataSourceProperties") DataSourceProperties cardHolderDataSourceProperties) {
+    public DataSource cardholderDataSource(@Qualifier("cardHolderDataSourceProperties") DataSourceProperties cardHolderDataSourceProperties){
         return cardHolderDataSourceProperties.initializeDataSourceBuilder()
                 .type(HikariDataSource.class)
                 .build();
@@ -41,6 +41,8 @@ public class CardHolderDatabaseConfiguration {
 
         Properties props = new Properties();
         props.put("hibernate.hbm2ddl.auto", "validate");
+        props.put("hibernate.physical_naming_strategy",
+                "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
 
         LocalContainerEntityManagerFactoryBean efb =  builder.dataSource(cardholderDataSource)
                 .packages(CreditCardHolder.class)
@@ -53,7 +55,10 @@ public class CardHolderDatabaseConfiguration {
     }
 
     @Bean
-    public PlatformTransactionManager cardHolderTransactionManager(@Qualifier("cardHolderEntityManagerFactory") LocalContainerEntityManagerFactoryBean cardHolderEntityManagerFactory) {
-        return new JpaTransactionManager(cardHolderEntityManagerFactory.getObject());
+    public PlatformTransactionManager cardholderTransactionManager(
+            @Qualifier("cardholderEntityManagerFactory") LocalContainerEntityManagerFactoryBean cardholderEntityManagerFactory){
+
+        return new JpaTransactionManager(cardholderEntityManagerFactory.getObject());
     }
 }
+

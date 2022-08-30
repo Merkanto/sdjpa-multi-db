@@ -10,6 +10,7 @@ import merkanto.sdjpamultidb.domain.CreditCardConverter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "credit_card_pan")
 public class CreditCardPAN {
 
     @Id
