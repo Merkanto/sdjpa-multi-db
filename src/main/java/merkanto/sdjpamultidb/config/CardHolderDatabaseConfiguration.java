@@ -14,6 +14,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 @EnableJpaRepositories(basePackages = "merkanto.sdjpamultidb.repositories.cardholder", entityManagerFactoryRef = "cardHolderEntityManagerFactory", transactionManagerRef = "cardHolderTransactionManager")
 @Configuration
@@ -34,11 +35,21 @@ public class CardHolderDatabaseConfiguration {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean cardHolderEntityManagerFactory(@Qualifier("cardHolderDataSource") DataSource cardHolderDataSource, EntityManagerFactoryBuilder builder) {
-        return builder.dataSource(cardHolderDataSource)
+    public LocalContainerEntityManagerFactoryBean cardholderEntityManagerFactory(
+            @Qualifier("cardholderDataSource") DataSource cardholderDataSource,
+            EntityManagerFactoryBuilder builder){
+
+        Properties props = new Properties();
+        props.put("hibernate.hbm2ddl.auto", "validate");
+
+        LocalContainerEntityManagerFactoryBean efb =  builder.dataSource(cardholderDataSource)
                 .packages(CreditCardHolder.class)
                 .persistenceUnit("cardholder")
                 .build();
+
+        efb.setJpaProperties(props);
+
+        return efb;
     }
 
     @Bean
