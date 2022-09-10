@@ -17,8 +17,8 @@ class SdjpaMultiDbApplicationTests {
     @Test
     void testSaveAndGetCreditCard() {
         CreditCard cc = CreditCard.builder()
-                .firstName("Miro")
-                .lastName("Ivanov")
+                .firstName("John")
+                .lastName("Thompson")
                 .zipCode("12345")
                 .creditCardNumber("1234556")
                 .cvv("123")
@@ -30,6 +30,12 @@ class SdjpaMultiDbApplicationTests {
         assertThat(savedCC).isNotNull();
         assertThat(savedCC.getId()).isNotNull();
         assertThat(savedCC.getCreditCardNumber()).isNotNull();
+
+        CreditCard fetchedCreditCard = creditCardService.getCreditCardById(savedCC.getId());
+
+        assertThat(fetchedCreditCard).isNotNull();
+        assertThat(fetchedCreditCard.getId()).isNotNull();
+        assertThat(fetchedCreditCard.getCreditCardNumber()).isNotNull();
     }
 
 

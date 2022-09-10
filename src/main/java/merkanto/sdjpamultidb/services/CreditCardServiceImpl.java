@@ -18,11 +18,19 @@ public class CreditCardServiceImpl implements CreditCardService {
     private final CreditCardRepository creditCardRepository;
     private final CreditCardPANRepository creditCardPANRepository;
 
+    @Transactional
     @Override
     public CreditCard getCreditCardById(Long id) {
-        //todo impl
+        CreditCard creditCard = creditCardRepository.findById(id).orElseThrow();
+        CreditCardHolder creditCardHolder = creditCardHolderRepository.findByCreditCardId(id).orElseThrow();
+        CreditCardPAN creditCardPAN = creditCardPANRepository.findByCreditCardId(id).orElseThrow();
 
-        return null;
+        creditCard.setFirstName(creditCardHolder.getFirstName());
+        creditCard.setLastName(creditCardHolder.getLastName());
+        creditCard.setZipCode(creditCard.getZipCode());
+        creditCard.setCreditCardNumber(creditCardPAN.getCreditCardNumber());
+
+        return creditCard;
     }
 
     @Transactional
@@ -31,19 +39,19 @@ public class CreditCardServiceImpl implements CreditCardService {
         CreditCard savedCC = creditCardRepository.save(cc);
         savedCC.setFirstName(cc.getFirstName());
         savedCC.setLastName(cc.getLastName());
-        savedCC.setZipCode(cc.getZipCode());
+        savedCC.setZipCode(cc.getCreditCardNumber());
         savedCC.setCreditCardNumber(cc.getCreditCardNumber());
 
         creditCardHolderRepository.save(CreditCardHolder.builder()
-                        .creditCardId(savedCC.getId())
-                        .firstName(savedCC.getFirstName())
-                        .lastName(savedCC.getLastName())
-                        .zipCode(savedCC.getZipCode())
+                .creditCardId(savedCC.getId())
+                .firstName(savedCC.getFirstName())
+                .lastName(savedCC.getLastName())
+                .zipCode(savedCC.getZipCode())
                 .build());
 
         creditCardPANRepository.save(CreditCardPAN.builder()
-                        .creditCardNumber(savedCC.getCreditCardNumber())
-                        .creditCardId(savedCC.getId())
+                .creditCardNumber(savedCC.getCreditCardNumber())
+                .creditCardId(savedCC.getId())
                 .build());
 
         return savedCC;
